@@ -14,6 +14,20 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+
+  const logout = async()=>{
+    try {
+        const {data} = await axios.post("/api/auth/logout")
+        if(data.success){
+            setUser(null)
+            toast.success(data.message)
+            navigate("/")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
   return (
     <nav className="shadow-md sticky top-0 z-50 py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,12 +52,6 @@ const Navbar = () => {
               className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
             >
               Menus
-            </Link>
-            <Link
-              to={"/book-table"}
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-            >
-              Book Table
             </Link>
             <Link
               to={"/contact"}
@@ -157,7 +165,7 @@ const Navbar = () => {
                     <div
                       onMouseEnter={() => setIsProfileOpen(true)}
                       onMouseLeave={() => setIsProfileOpen(false)}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100"
+                      className="absolute right-0  w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-100"
                     >
                       <Link
                         to={"/my-bookings"}

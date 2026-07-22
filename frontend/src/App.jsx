@@ -11,12 +11,22 @@ import MyOrders from './pages/MyOrders'
 import Navbar from './components/Navbar'
 import Setting from './pages/Setting'
 import { Toaster } from 'react-hot-toast'
-
+import Footer from './components/Footer'
+import AdminLayout from './pages/admin/AdminLayout'
+import { useContext } from 'react'
+import { AppContext } from './context/AppContext'
+import AdminLogin from './pages/admin/AdminLogin'
+import Dashboard from './pages/admin/Dashboard'
+import AddCategory from './pages/admin/AddCategory'
+import AddMenu from './pages/admin/AddMenu'
+import Categories from './pages/admin/Categories'
+import Menus from './pages/admin/Menus'
+import Orders from './pages/admin/Orders'
 
 const App = () => {
 
   const adminPath  = useLocation().pathname.includes("admin")
-
+  const {admin} = useContext(AppContext)
   return (
     <div>
       <Toaster position='bottom-right'/>
@@ -32,7 +42,18 @@ const App = () => {
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/setting" element={<Setting/>}/>
+
+        {/* admin routes */}
+        <Route path='/admin' element={admin? <AdminLayout/> : <AdminLogin/>}>
+          <Route index element={admin ? <Dashboard/>: <AdminLogin/>}/>
+          <Route path="add-category" element={admin ? <AddCategory/>: <AdminLogin/>}/>
+          <Route path="add-menu" element={admin ? <AddMenu/>: <AdminLogin/>}/>
+          <Route path="categories" element={admin ? <Categories/>: <AdminLogin/>}/>
+          <Route path="menus" element={admin ? <Menus/>: <AdminLogin/>}/>
+          <Route path="orders" element={admin ? <Orders/>: <AdminLogin/>}/>
+        </Route>
       </Routes>
+      {!adminPath && <Footer/>}
     </div>
   )
 }

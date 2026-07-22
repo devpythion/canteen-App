@@ -14,12 +14,19 @@ const Login = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         try {
-            setLoading(true)
-            
+          setLoading(true)
+          const {data} = await axios.post("/api/auth/login",formData);
+          if(data.success){
+            setUser(data.success)
+            toast.success(data.message)
+            navigate("/")
+          }
         } catch (error) {
-            
+            toast.error(data.message)
         }
-        toast.success("Loggedin Successfully")
+        finally{
+            setLoading(false)
+        }
     }
 
     const handleChange = (e) => {
@@ -49,7 +56,7 @@ const Login = () => {
             </div>
 
             <button type="submit" className="mt-2 w-full h-11 rounded-full text-black bg-primary hover:bg-black hover:text-white transition " >
-                Login
+                {loading? "Loading...":"Login"}
             </button>
             <p className="text-black text-sm mt-3 mb-11 cursor-pointer" >
                 Don't have an account?

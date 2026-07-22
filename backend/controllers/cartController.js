@@ -51,7 +51,7 @@ export const removeFromCart = async(req,res)=>{
         const { id } = req.user
         const { menuItemId} = req.body
 
-        const cart = await Cart.findOneAndDelete({user:id})
+        const cart = await Cart.findOne({user:id})
         if(!cart) return res.status(404).json({ message: "Cart not found"})
         cart.items = cart.items.filter((item)=>item.menuItem.toString()!== menuItemId)
 
