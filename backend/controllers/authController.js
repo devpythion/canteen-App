@@ -116,7 +116,12 @@ export const adminLogin = async(req,res)=>{
         sameSite:"none",
         maxAge:24*60*60*1000 //expire Time
     })
-        return res.json({message:"Admin logged in successfully",success:true})
+        return res.json({ 
+        message:"Admin logged in successfully",
+        success:true,
+        admin:{
+            admin:adminEmail
+        }})
 
     }
     catch(error){

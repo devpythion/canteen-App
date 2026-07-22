@@ -27,6 +27,7 @@ const App = () => {
 
   const adminPath  = useLocation().pathname.includes("admin")
   const {admin} = useContext(AppContext)
+  console.log(admin)
   return (
     <div>
       <Toaster position='bottom-right'/>

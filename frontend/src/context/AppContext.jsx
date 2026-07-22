@@ -9,13 +9,14 @@ const AppContextProvider = ({children})=>{
     const navigate = useNavigate()
     const [loading,setLoading] = useState(false)
     const [user,setUser] = useState(null)
-    const [admin,setAdmin] = useState(null)
+    const [admin,setAdmin] = useState(true)
 
     const isAuth = async()=>{
         try {
             const {data} = await axios.get("/api/auth/is-auth")
             if(data.success){
                 setUser(data.user);
+
             }
         } catch (error) {
             console.log(error)

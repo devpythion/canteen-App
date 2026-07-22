@@ -13,6 +13,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import router from './routes/root.js'
+import {logger} from './middlewares/logger.js'
+import { errorHandler } from './middlewares/errorHandler.js'
 
 dotenv.config()
 
@@ -21,6 +23,10 @@ const app = express()
 //database connection
 connectDB()
 connectCloudinary()
+
+//Logger
+app.use(logger)
+
 //middlewares
 app.use(express.json())
 app.use(cors({
@@ -54,6 +60,8 @@ app.all('/*splat',(req,res)=>{
         res.type('txt').send('404 Not Found')
     }
 })
+
+app.use(errorHandler)
 
 app.listen(PORT, ()=>{
     console.log(`server is running on port ${PORT}`)
