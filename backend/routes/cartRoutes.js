@@ -7,6 +7,6 @@ const cartRoutes = express.Router()
 
 cartRoutes.post("/add",protect,AddToCart)
 cartRoutes.get("/get",protect,getCart)
-cartRoutes.delete("/remove",protect,removeFromCart)
+cartRoutes.delete("/remove/:menuId",protect,removeFromCart)
 
 export default cartRoutes

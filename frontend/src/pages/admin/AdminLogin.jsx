@@ -1,68 +1,96 @@
-import { Lock, Mail, User2Icon } from "lucide-react"
-import { useContext, useState } from "react"
-import {toast} from 'react-hot-toast'
-import { Link } from "react-router-dom"
-
-import { AppContext } from "../../context/AppContext"
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { LockIcon, MailIcon } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { AppContext } from "../../context/AppContext";
 const AdminLogin = () => {
-    const {navigate, loading, setLoading,axios,setAdmin } = useContext(AppContext)
+  const { navigate, loading, setLoading, axios, setAdmin } =
+    useContext(AppContext);
+  // state for input value
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    })
+  // handle change input value
+  const onChangeHandler = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-    const handleSubmit = async(e) => {
-        e.preventDefault()
-        try {
-          setLoading(true)
-          const {data} = await axios.post("/api/auth/admin/login",formData);
-          if(data.success){
-            setAdmin(true)
-            localStorage.setItem("admin", JSON.stringify(data.admin))
-            toast.success(data.message)
-            navigate("/admin")
-          }
-        } catch (error) {
-            toast.error(data.message)
-        }
-        finally{
-            setLoading(false)
-        }
+  // handle submit form
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/auth/admin/login", formData);
+
+      if (data.success) {
+        // 👈 Save admin object to localStorage so it survives page reloads
+        const adminData = data.admin || { email: formData.email, name: "Admin" };
+        localStorage.setItem("admin", JSON.stringify(adminData));
+        setAdmin(adminData);
+        
+        toast.success(data.message);
+        navigate("/admin");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Admin login failed");
+    } finally {
+      setLoading(false);
     }
+  };
+  return (
+    <div className=" py-12 flex h-screen items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className=" py-12 w-full sm:w-87.5 text-center border border-zinc-300/60 dark:border-zinc-700 rounded-2xl px-8 bg-white dark:bg-zinc-900"
+      >
+        <h1 className="text-zinc-900 dark:text-white text-3xl mt-10 font-medium">
+          Login
+        </h1>
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 pb-6">
+          Please Login in to continue
+        </p>
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+        <div className="flex items-center w-full mt-4 bg-white dark:bg-zinc-800 border border-zinc-300/80 dark:border-zinc-700 h-12 rounded-full overflow-hidden pl-6 gap-2">
+          {/* Mail Icon */}
+          <MailIcon className="text-white" />
+          <input
+            type="email"
+            placeholder="Email id"
+            className="bg-transparent text-zinc-600 dark:text-zinc-200 placeholder-zinc-500 dark:placeholder-zinc-400 outline-none text-sm w-full h-full"
+            name="email"
+            value={formData.email}
+            onChange={onChangeHandler}
+            required
+          />
+        </div>
 
-    return (
-      <div className="py-12 flex items-center justify-center">
-        <form
-            onSubmit={handleSubmit}
-            className="sm:w-87.5 w-full text-center bg-white border border-black rounded-2xl px-8">
-            <h1 className="text-black text-3xl mt-10 font-medium">
-                Login
-            </h1>
+        <div className="flex items-center mt-4 w-full bg-white dark:bg-zinc-800 border border-zinc-300/80 dark:border-zinc-700 h-12 rounded-full overflow-hidden pl-6 gap-2">
+          {/* Lock Icon */}
+          <LockIcon className="text-white" />
+          <input
+            type="password"
+            placeholder="Password"
+            className="bg-transparent text-zinc-600 dark:text-zinc-200 placeholder-zinc-500 dark:placeholder-zinc-400 outline-none text-sm w-full h-full"
+            name="password"
+            value={formData.password}
+            onChange={onChangeHandler}
+            required
+          />
+        </div>
 
-            <p className="text-black text-sm mt-2">Please login to continue</p>
+        <button
+          type="submit"
+          className="mt-2 w-full h-11 rounded-full text-white bg-orange-500 hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          {loading ? "Loading..." : "Login"}
+        </button>
+      </form>
+    </div>
+  );
+};
 
-            <div className="flex items-center w-full mt-4 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
-                <Mail/>
-                <input type="email" name="email" placeholder="Email Id" className="w-full  text-black border-none outline-none " value={formData.email} onChange={handleChange} required />
-            </div>
-
-            <div className=" flex items-center mt-4 w-full border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
-                <Lock/>
-                <input type="password" name="password" placeholder="Password" className="w-full  text-black border-none outline-none" value={formData.password} onChange={handleChange} required />
-            </div>
-
-            <button type="submit" className="mt-5 mb-10 w-full h-11 rounded-full text-black bg-primary hover:bg-black hover:text-white transition " >
-                {loading? "Loading...":"Login"}
-            </button>
-        </form>
-        </ div>
-    )
-}
-
-export default AdminLogin
+export default AdminLogin;

@@ -1,9 +1,13 @@
 import React from 'react'
-
+import Hero from "../components/Hero"
+import Categories from '../components/Categories'
+import Menus from '../components/Menus'
 const Home = () => {
   return (
     <div>
-      I am Home
+      <Hero/>
+      <Categories/>
+      <Menus/>
     </div>
   )
 }

@@ -18,7 +18,7 @@ export const addCategory = async(req,res)=>{
             image: result.secure_url
         })
         console.log(newCategory)
-        res.json({message:"Category added",succes:true,category: newCategory})
+        res.json({message:"Category added",success:true,category: newCategory})
     }
     catch(error){
         console.log(error)
@@ -69,11 +69,11 @@ export const deleteCategory = async(req,res)=>{
         const category = await Category.findByIdAndDelete(id)
 
         if(!category){
-            return res.status(400).json({message: "Category not found"})
+            return res.status(404).json({ success: false, message: "Category not found"})
         }
-        return res.status(404).json({ message: 'Category deleted'})
+        return res.status(200).json({ success: true, message: 'Category deleted'})
     }
     catch(error){
-        return res.json({message:" Internal server error",success:false})
+        return res.json({message:" Internal server error", success:false})
     }
 }
